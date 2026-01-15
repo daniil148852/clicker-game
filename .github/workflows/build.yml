@@ -1,0 +1,81 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  # Позволяет запускать вручную
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          python3-pip \
+          build-essential \
+          git \
+          ffmpeg \
+          libsdl2-dev \
+          libsdl2-image-dev \
+          libsdl2-mixer-dev \
+          libsdl2-ttf-dev \
+          libportmidi-dev \
+          libswscale-dev \
+          libavformat-dev \
+          libavcodec-dev \
+          zlib1g-dev \
+          libgstreamer1.0-dev \
+          gstreamer1.0-plugins-base \
+          libgstreamer-plugins-base1.0-dev \
+          libunwind-dev \
+          autoconf \
+          libtool \
+          pkg-config \
+          libncurses5-dev \
+          libncursesw5-dev \
+          libtinfo5 \
+          cmake \
+          libffi-dev \
+          libssl-dev \
+          automake \
+          zip \
+          unzip \
+          openjdk-17-jdk
+    
+    - name: Install Python dependencies
+      run: |
+        pip install --upgrade pip setuptools wheel
+        pip install cython==0.29.36
+        pip install buildozer
+        pip install kivy
+    
+    - name: Set up Java
+      run: |
+        echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
+    
+    - name: Build APK with Buildozer
+      run: |
+        yes | buildozer android debug
+      env:
+        JAVA_HOME: /usr/lib/jvm/java-17-openjdk-amd64
+    
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: clicker-game-apk
+        path: bin/*.apk
+        retention-days: 30
