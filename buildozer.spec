@@ -1,7 +1,7 @@
 [app]
-title = Clicker Game
-package.name = clickergame
-package.domain = org.example
+title = Star Empire
+package.name = starempire
+package.domain = org.game
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,json
 version = 1.0
@@ -10,9 +10,9 @@ orientation = portrait
 fullscreen = 1
 
 [app:android]
-android.api = 33
+android.api = 31
 android.minapi = 21
 android.ndk = 25b
-android.archs = arm64-v8a, armeabi-v7a
+android.archs = arm64-v8a
 android.permissions = INTERNET
 android.accept_sdk_license = True
